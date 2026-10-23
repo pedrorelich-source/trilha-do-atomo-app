@@ -6,6 +6,7 @@ import '../models/usuario.dart';
 import '../theme/app_theme.dart';
 import '../widgets/estacao_card.dart';
 import 'estacao_screen.dart';
+import 'perfil_screen.dart';
 
 /// Tela principal: progresso do jogador e grade com as estações da trilha.
 class TrilhaScreen extends StatefulWidget {
@@ -26,13 +27,28 @@ class _TrilhaScreenState extends State<TrilhaScreen> {
     setState(() {});
   }
 
+  void _abrirPerfil() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => PerfilScreen(usuario: widget.usuario)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final usuario = widget.usuario;
     final concluidas = usuario.estacoesConcluidas.length;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Olá, ${usuario.primeiroNome}!')),
+      appBar: AppBar(
+        title: Text('Olá, ${usuario.primeiroNome}!'),
+        actions: [
+          IconButton(
+            tooltip: 'Meu perfil',
+            icon: const Icon(Icons.account_circle_outlined),
+            onPressed: _abrirPerfil,
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(AppEspacos.medio),
         child: Column(
