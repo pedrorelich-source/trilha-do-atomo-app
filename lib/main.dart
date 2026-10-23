@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'screens/boas_vindas_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -15,9 +16,7 @@ class TrilhaDoAtomoApp extends StatelessWidget {
       title: 'Trilha do Átomo',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.tema,
-      home: const Scaffold(
-        body: Center(child: Text('Trilha do Átomo')),
-      ),
+      home: const BoasVindasScreen(),
     );
   }
 }
