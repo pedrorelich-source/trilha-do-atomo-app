@@ -3,17 +3,43 @@ import 'package:flutter/material.dart';
 import '../models/estacao.dart';
 import '../models/usuario.dart';
 import '../theme/app_theme.dart';
+import 'desafio_screen.dart';
 
 /// Detalhes de uma estação: conteúdo, benefício, fonte e acesso ao desafio.
-class EstacaoScreen extends StatelessWidget {
+class EstacaoScreen extends StatefulWidget {
   const EstacaoScreen({super.key, required this.estacao, required this.usuario});
 
   final Estacao estacao;
   final Usuario usuario;
 
   @override
+  State<EstacaoScreen> createState() => _EstacaoScreenState();
+}
+
+class _EstacaoScreenState extends State<EstacaoScreen> {
+  Future<void> _abrirDesafio() async {
+    final resultado = await Navigator.of(context).push<ResultadoDesafio>(
+      MaterialPageRoute(builder: (_) => DesafioScreen(estacao: widget.estacao)),
+    );
+    if (resultado == null || !mounted) return; // saiu no meio do desafio
+
+    final pontosAntes = widget.usuario.pontos;
+    setState(() => widget.usuario.registrarResultado(widget.estacao.id, resultado));
+    final ganhos = widget.usuario.pontos - pontosAntes;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(ganhos > 0
+            ? 'Progresso salvo: +$ganhos pontos no total.'
+            : 'Progresso salvo. Para somar pontos, supere sua melhor marca.'),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final melhor = usuario.melhorPontuacao[estacao.id];
+    final estacao = widget.estacao;
+    final melhor = widget.usuario.melhorPontuacao[estacao.id];
 
     return Scaffold(
       appBar: AppBar(title: Text(estacao.area)),
@@ -62,7 +88,7 @@ class EstacaoScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppEspacos.grande),
           FilledButton.icon(
-            onPressed: () {},
+            onPressed: _abrirDesafio,
             icon: const Icon(Icons.quiz_outlined),
             label: Text(melhor == null ? 'Responder: Mito ou Verdade' : 'Tentar de novo'),
           ),
