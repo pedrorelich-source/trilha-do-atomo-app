@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../data/dados_mock.dart';
+import '../models/estacao.dart';
 import '../models/usuario.dart';
 import '../theme/app_theme.dart';
 import '../widgets/estacao_card.dart';
+import 'estacao_screen.dart';
 
 /// Tela principal: progresso do jogador e grade com as estações da trilha.
 class TrilhaScreen extends StatefulWidget {
@@ -16,6 +18,14 @@ class TrilhaScreen extends StatefulWidget {
 }
 
 class _TrilhaScreenState extends State<TrilhaScreen> {
+  Future<void> _abrirEstacao(Estacao estacao) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => EstacaoScreen(estacao: estacao, usuario: widget.usuario)),
+    );
+    // Ao voltar, o progresso pode ter mudado: redesenha a grade e o cartão de pontos.
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final usuario = widget.usuario;
@@ -51,7 +61,7 @@ class _TrilhaScreenState extends State<TrilhaScreen> {
                   return EstacaoCard(
                     estacao: estacao,
                     concluida: usuario.estacoesConcluidas.contains(estacao.id),
-                    onTap: () {},
+                    onTap: () => _abrirEstacao(estacao),
                   );
                 },
               ),
