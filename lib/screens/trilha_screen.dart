@@ -5,6 +5,7 @@ import '../models/estacao.dart';
 import '../models/usuario.dart';
 import '../theme/app_theme.dart';
 import '../widgets/estacao_card.dart';
+import 'estacao_ao_vivo_screen.dart';
 import 'estacao_screen.dart';
 import 'perfil_screen.dart';
 
@@ -59,6 +60,19 @@ class _TrilhaScreenState extends State<TrilhaScreen> {
               nivel: usuario.nivelJogador,
               concluidas: concluidas,
               total: estacoesMock.length,
+            ),
+            const SizedBox(height: 12),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                leading: const Icon(Icons.sensors, color: AppCores.ambarEscuro),
+                title: const Text('Estação ao vivo'),
+                subtitle: const Text('Veja a radiação natural do ambiente'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const EstacaoAoVivoScreen()),
+                ),
+              ),
             ),
             const SizedBox(height: AppEspacos.medio),
             Text('Estações da trilha', style: Theme.of(context).textTheme.titleLarge),
