@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../data/dados_mock.dart';
 import '../models/usuario.dart';
+import '../theme/app_theme.dart';
+import '../widgets/estacao_card.dart';
 
-/// Tela principal da trilha (a grade de estações é implementada no próximo passo).
+/// Tela principal: progresso do jogador e grade com as estações da trilha.
 class TrilhaScreen extends StatefulWidget {
   const TrilhaScreen({super.key, required this.usuario});
 
@@ -15,9 +18,101 @@ class TrilhaScreen extends StatefulWidget {
 class _TrilhaScreenState extends State<TrilhaScreen> {
   @override
   Widget build(BuildContext context) {
+    final usuario = widget.usuario;
+    final concluidas = usuario.estacoesConcluidas.length;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Olá, ${widget.usuario.primeiroNome}!')),
-      body: const Center(child: Text('Estações da trilha')),
+      appBar: AppBar(title: Text('Olá, ${usuario.primeiroNome}!')),
+      body: Padding(
+        padding: const EdgeInsets.all(AppEspacos.medio),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _CardProgresso(
+              pontos: usuario.pontos,
+              nivel: usuario.nivelJogador,
+              concluidas: concluidas,
+              total: estacoesMock.length,
+            ),
+            const SizedBox(height: AppEspacos.medio),
+            Text('Estações da trilha', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: AppEspacos.pequeno),
+            Expanded(
+              child: GridView.builder(
+                itemCount: estacoesMock.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 1.05,
+                ),
+                itemBuilder: (context, indice) {
+                  final estacao = estacoesMock[indice];
+                  return EstacaoCard(
+                    estacao: estacao,
+                    concluida: usuario.estacoesConcluidas.contains(estacao.id),
+                    onTap: () {},
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CardProgresso extends StatelessWidget {
+  const _CardProgresso({
+    required this.pontos,
+    required this.nivel,
+    required this.concluidas,
+    required this.total,
+  });
+
+  final int pontos;
+  final String nivel;
+  final int concluidas;
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppEspacos.medio),
+      decoration: BoxDecoration(color: AppCores.marinho, borderRadius: BorderRadius.circular(18)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.emoji_events, color: AppCores.ambar),
+              const SizedBox(width: AppEspacos.pequeno),
+              Text(
+                '$pontos pontos',
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: AppCores.creme),
+              ),
+              const Spacer(),
+              Text(nivel, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppCores.ambar)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: total == 0 ? 0 : concluidas / total,
+              minHeight: 10,
+              backgroundColor: AppCores.marinhoClaro,
+              color: AppCores.ambar,
+            ),
+          ),
+          const SizedBox(height: AppEspacos.pequeno),
+          Text(
+            '$concluidas de $total estações concluídas',
+            style: const TextStyle(fontSize: 14, color: AppCores.textoClaro),
+          ),
+        ],
+      ),
     );
   }
 }
