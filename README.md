@@ -12,7 +12,7 @@ Primeira versão funcional do aplicativo **Trilha do Átomo**, uma experiência 
 | Pedro Relich | RM567933 |
 | Luigi Martiins | RM568381 |
 
-Curso: Análise e Desenvolvimento de Sistemas — 2º ano (turmas de agosto)
+Curso: Análise e Desenvolvimento de Sistemas — 2º ano (turmas de agosto) · Turma: **2TDSPA**
 
 ## Descrição da solução
 
